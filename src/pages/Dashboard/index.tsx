@@ -4,7 +4,7 @@ import api from '../../services/api';
 
 import logo from '../../assets/logo.svg';
 
-import { Container, Title, Form, Repositories } from './styles';
+import { Container, Title, Form, Error, Repositories } from './styles';
 
 interface Repository {
   full_name: string;
@@ -16,6 +16,7 @@ interface Repository {
 }
 
 const Dashboard: React.FC = () => {
+  const [inputError, setInputError] = useState('');
   const [newRepo, setNewRepo] = useState('');
   const [repositories, setRepositories] = useState<Repository[]>([]);
 
@@ -24,22 +25,32 @@ const Dashboard: React.FC = () => {
   ): Promise<void> {
     event.preventDefault();
 
-    const response = await api.get<Repository>(`repos/${newRepo}`);
+    if (!inputError) {
+      setInputError('Digite um nome de repositório');
+      return;
+    }
 
-    const repository = response.data;
+    try {
+      const response = await api.get<Repository>(`repos/${newRepo}`);
 
-    setRepositories([...repositories, repository]);
+      const repository = response.data;
 
-    setNewRepo('');
+      setRepositories([...repositories, repository]);
+
+      setNewRepo('');
+      setInputError('');
+    } catch (err) {
+      setInputError('Repositório não encontrado');
+    }
   }
 
   return (
     <Container>
     <img src={logo} alt="Logo Github Explorer" />
     <Title>Explore repositórios no Github</Title>
-    <Form onSubmit={handleAddRepository}>
+    <Form hasError={!!inputError} onSubmit={handleAddRepository}>
       <input
-        autoFocus={true}
+        autoFocus={!!inputError}
         value={newRepo}
         onChange={(e) => setNewRepo(e.target.value)}
         placeholder="Digite o nome do repositório"
@@ -47,18 +58,20 @@ const Dashboard: React.FC = () => {
       <button type="submit">Pesquisar</button>
     </Form>
 
+    <Error>{inputError}&nbsp;</Error>
+
     <Repositories>
       {repositories.map(repository => (
-        <a key={repository.full_name} href="teste">
+      <a key={repository.full_name} href="teste">
         <img
           src={repository.owner.avatar_url}
           alt={repository.owner.login}
         />
-      <div>
-      <strong>{repository.full_name}</strong>
-        <p>{repository.description}</p>
-      </div>
-      <BsChevronRight size={20} />
+        <div>
+        <strong>{repository.full_name}</strong>
+          <p>{repository.description}</p>
+        </div>
+        <BsChevronRight size={20} />
       </a>
       ))}
     </Repositories>

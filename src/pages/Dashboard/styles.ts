@@ -1,4 +1,8 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+
+interface FormProps {
+  hasError: boolean;
+}
 
 export const Container = styled.div`
   width: 550px;
@@ -10,7 +14,7 @@ export const Title = styled.h1`
   width: 300px;
 `;
 
-export const Form = styled.form`
+export const Form = styled.form<FormProps>`
   margin-top: 30px;
   display: flex;
   max-width: 550px;
@@ -24,13 +28,26 @@ export const Form = styled.form`
     color: #f8f8f2;
     transition: all 200ms ease-in-out;
 
+    &:focus {
+      box-shadow: 0 0 20px #50fa7b90;
+    }
+
+    ${(props) =>
+      props.hasError &&
+      css`
+        border-color: #ff5555;
+        border-right: none;
+        box-shadow: 0 0 20px #ff555590;
+
+        input:focus {
+          box-shadow: 0 0 20px #ff555590;
+        }
+      `}
+
     &::placeholder {
       color: #f8f8f2;
     }
 
-    &:focus {
-      box-shadow: 0 0 20px #50fa7b90;
-    }
   }
 
   button {
@@ -47,6 +64,13 @@ export const Form = styled.form`
     box-shadow: 0 0 20px #50fa7b90;
     }
   }
+`;
+
+export const Error = styled.span`
+  display: block;
+  color: #ff5555;
+  margin-top: 7px;
+  font-size: 14px;
 `;
 
 export const Repositories = styled.div`
