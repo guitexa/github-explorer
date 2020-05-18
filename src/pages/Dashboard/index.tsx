@@ -16,8 +16,8 @@ interface Repository {
 }
 
 const Dashboard: React.FC = () => {
-  const [inputError, setInputError] = useState('');
   const [newRepo, setNewRepo] = useState('');
+  const [inputError, setInputError] = useState('');
   const [repositories, setRepositories] = useState<Repository[]>([]);
 
   async function handleAddRepository(
@@ -25,7 +25,7 @@ const Dashboard: React.FC = () => {
   ): Promise<void> {
     event.preventDefault();
 
-    if (!inputError) {
+    if (!newRepo) {
       setInputError('Digite um nome de repositório');
       return;
     }
@@ -50,7 +50,7 @@ const Dashboard: React.FC = () => {
     <Title>Explore repositórios no Github</Title>
     <Form hasError={!!inputError} onSubmit={handleAddRepository}>
       <input
-        autoFocus={!!inputError}
+        autoFocus={true}
         value={newRepo}
         onChange={(e) => setNewRepo(e.target.value)}
         placeholder="Digite o nome do repositório"

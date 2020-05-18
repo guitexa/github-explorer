@@ -29,7 +29,7 @@ export const Form = styled.form<FormProps>`
     transition: all 200ms ease-in-out;
 
     &:focus {
-      box-shadow: 0 0 20px #50fa7b90;
+      box-shadow: 0 0 20px ${({ hasError }) => (hasError ? '#ff555590' : '#50fa7b90' )};
     }
 
     ${(props) =>
@@ -38,10 +38,6 @@ export const Form = styled.form<FormProps>`
         border-color: #ff5555;
         border-right: none;
         box-shadow: 0 0 20px #ff555590;
-
-        input:focus {
-          box-shadow: 0 0 20px #ff555590;
-        }
       `}
 
     &::placeholder {
@@ -92,8 +88,12 @@ export const Repositories = styled.div`
     }
 
     &:hover {
-      transform: translateX(10px);
       box-shadow: 0 0 20px #50fa7b90;
+      transform: translateX(10px);
+
+      svg {
+      opacity: 1;
+      }
     }
 
     img {
@@ -117,6 +117,7 @@ export const Repositories = styled.div`
       margin-left: auto;
       color: #50fa7b;
       opacity: 0.6;
+      transition: all 200ms ease-in-out;
     }
   }
 `;
