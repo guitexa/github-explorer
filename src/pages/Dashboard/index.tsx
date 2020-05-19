@@ -1,10 +1,12 @@
-import React, { useState, useEffect, FormEvent } from 'react';
+import React, { useState, useEffect, FormEvent, MouseEvent } from 'react';
+import { Link } from 'react-router-dom'
 import { BsChevronRight } from 'react-icons/bs';
+import { RiCloseLine } from 'react-icons/ri';
 import api from '../../services/api';
 
 import logo from '../../assets/logo.svg';
 
-import { Container, Title, Form, Error, Repositories } from './styles';
+import { Container, Title, Form, Error, Repositories, Repository } from './styles';
 
 interface Repository {
   full_name: string;
@@ -58,6 +60,12 @@ const Dashboard: React.FC = () => {
       setInputError('Repositório não encontrado');
     }
   }
+  function handleRemoveRepository(repoName: string): void {
+    const getIndex = repositories.findIndex(obj => obj.full_name === repoName);
+
+    repositories.splice(getIndex, 1);
+    setRepositories([...repositories]);
+  };
 
   return (
     <Container>
@@ -77,17 +85,20 @@ const Dashboard: React.FC = () => {
 
     <Repositories>
       {repositories.map(repository => (
-      <a key={repository.full_name} href="teste">
+      <Repository key={repository.full_name}>
+      <button onClick={() => handleRemoveRepository(repository.full_name)}><RiCloseLine size={20}/></button>
+      <Link to={`/repository/${repository.full_name}`}>
         <img
           src={repository.owner.avatar_url}
           alt={repository.owner.login}
         />
         <div>
-        <strong>{repository.full_name}</strong>
+          <strong>{repository.full_name}</strong>
           <p>{repository.description}</p>
         </div>
         <BsChevronRight size={20} />
-      </a>
+      </Link>
+      </Repository>
       ))}
     </Repositories>
     </Container>

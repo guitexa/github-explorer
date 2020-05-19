@@ -15,6 +15,7 @@ export default createGlobalStyle`
     background: #282a36 url(${gitBg}) no-repeat 90% top fixed;
     background-size: 50%;
     -webkit-font-smoothing: antialiased;
+    color: #f8f8f2;
   }
 
   body, input, button {

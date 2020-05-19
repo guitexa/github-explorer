@@ -4,7 +4,7 @@ interface FormProps {
   hasError: boolean;
 }
 
-export const Container = styled.div`
+export const Container = styled.section`
   width: 550px;
 `;
 
@@ -72,6 +72,26 @@ export const Error = styled.span`
 export const Repositories = styled.div`
   margin-top: 50px;
   max-width: 550px;
+`;
+
+export const Repository = styled.div`
+  transition: all 200ms ease-in-out;
+
+  & + div {
+      margin-top: 20px;
+    }
+
+  &:hover {
+    box-shadow: 0 0 20px #50fa7b90;
+    transform: translateX(5px);
+
+    a {
+      svg {
+        opacity: 1;
+      }
+    }
+
+  }
 
   a {
     background: transparent;
@@ -82,19 +102,6 @@ export const Repositories = styled.div`
     border: 1px solid #50fa7b;
     color: #50fa7b;
     transition: all 200ms ease-in-out;
-
-    & + a {
-      margin-top: 20px;
-    }
-
-    &:hover {
-      box-shadow: 0 0 20px #50fa7b90;
-      transform: translateX(10px);
-
-      svg {
-      opacity: 1;
-      }
-    }
 
     img {
       width: 50px;
@@ -116,8 +123,32 @@ export const Repositories = styled.div`
     svg {
       margin-left: auto;
       color: #50fa7b;
-      opacity: 0.6;
+      opacity: 0.4;
       transition: all 200ms ease-in-out;
+    }
+  }
+
+  button {
+    z-index: 1000;
+    display: flex;
+    align-self: end;
+    position: absolute;
+    margin-top: 3px;
+    margin-left: 3px;
+    width: 25px;
+    height: 25px;
+    background-color: transparent;
+    border: none;
+    transition: all 200ms ease-in-out;
+
+    svg {
+      color: #f8f8f2;
+      opacity: 0.3;
+      margin-left: 0;
+
+      &:hover {
+        opacity: 1;
+      }
     }
   }
 `;
