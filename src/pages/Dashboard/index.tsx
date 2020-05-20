@@ -1,4 +1,4 @@
-import React, { useState, useEffect, FormEvent, MouseEvent } from 'react';
+import React, { useState, useEffect, FormEvent } from 'react';
 import { Link } from 'react-router-dom'
 import { BsChevronRight } from 'react-icons/bs';
 import { RiCloseLine } from 'react-icons/ri';
@@ -47,6 +47,13 @@ const Dashboard: React.FC = () => {
       return;
     }
 
+    const checkExists = repositories.find(e => e.full_name === newRepo);
+
+    if (checkExists) {
+      setInputError('Este repositório já foi adicionado');
+      return;
+    }
+
     try {
       const response = await api.get<Repository>(`repos/${newRepo}`);
 
@@ -60,11 +67,48 @@ const Dashboard: React.FC = () => {
       setInputError('Repositório não encontrado');
     }
   }
+
+  document.onkeyup = eventKeyUp;
+  function eventKeyUp(e: any) {
+    if ((e.key === 'Backspace') && (inputError !== '' && newRepo === '')) {
+      setInputError('');
+    }
+  }
+
+  document.onkeydown = eventKeyDown;
+  function eventKeyDown(e: any) {
+    if (e.key === 'Escape') {
+      setRemove('')
+
+      if (inputError !== '' && newRepo === '') {
+        setInputError('');
+      }
+    }
+  }
+
+  window.onclick = (e: any) => {
+    const getClassName = e.target.parentNode.className;
+    const getNodeName = e.target.parentNode.nodeName.toLowerCase();
+    const getBaseVal = e.target.className.baseVal;
+
+    if (getClassName !== 'confirmed' && getBaseVal !== '') {
+      setRemove('')
+    }
+
+    if (getNodeName !== 'form' && (inputError !== '' && newRepo === '')) {
+      setInputError('');
+    }
+  }
+
+
+  const [remove, setRemove] = useState('');
+
   function handleRemoveRepository(repoName: string): void {
     const getIndex = repositories.findIndex(obj => obj.full_name === repoName);
 
     repositories.splice(getIndex, 1);
     setRepositories([...repositories]);
+    setRemove('');
   };
 
   return (
@@ -85,19 +129,20 @@ const Dashboard: React.FC = () => {
 
     <Repositories>
       {repositories.map(repository => (
-      <Repository key={repository.full_name}>
-      <button onClick={() => handleRemoveRepository(repository.full_name)}><RiCloseLine size={20}/></button>
-      <Link to={`/repository/${repository.full_name}`}>
-        <img
-          src={repository.owner.avatar_url}
-          alt={repository.owner.login}
-        />
-        <div>
-          <strong>{repository.full_name}</strong>
-          <p>{repository.description}</p>
-        </div>
-        <BsChevronRight size={20} />
-      </Link>
+      <Repository key={repository.full_name} hasConfirmed={remove.includes(repository.full_name)}>
+        {remove.includes(repository.full_name) && <button id={`confirmed${repository.full_name.replace(/\//g, '')}`} className="confirmed" onClick={() => handleRemoveRepository(repository.full_name)}><RiCloseLine size={20}/></button>}
+        {!remove.includes(repository.full_name) && <button id={`unconfirmed${repository.full_name.replace(/\//g, '')}`}  className="unconfirmed" onClick={() => setRemove(repository.full_name)}><RiCloseLine size={20}/></button>}
+        <Link to={`/repository/${repository.full_name}`}>
+          <img
+            src={repository.owner.avatar_url}
+            alt={repository.owner.login}
+          />
+          <div>
+            <strong>{repository.full_name}</strong>
+            <p>{repository.description}</p>
+          </div>
+          <BsChevronRight size={20} />
+        </Link>
       </Repository>
       ))}
     </Repositories>

@@ -3,6 +3,9 @@ import styled, { css } from 'styled-components';
 interface FormProps {
   hasError: boolean;
 }
+interface ConfirmProps {
+  hasConfirmed: boolean;
+}
 
 export const Container = styled.section`
   width: 550px;
@@ -38,7 +41,7 @@ export const Form = styled.form<FormProps>`
         border-color: #ff5555;
         border-right: none;
         box-shadow: 0 0 20px #ff555590;
-      `}
+    `}
 
     &::placeholder {
       color: #f8f8f2;
@@ -74,44 +77,57 @@ export const Repositories = styled.div`
   max-width: 550px;
 `;
 
-export const Repository = styled.div`
+export const Repository = styled.div<ConfirmProps>`
   transition: all 200ms ease-in-out;
+    ${(props) =>
+      props.hasConfirmed &&
+      css`
+        box-shadow: 0 0 10px #ff555580;
+      `}
 
   & + div {
       margin-top: 20px;
     }
 
   &:hover {
-    box-shadow: 0 0 20px #50fa7b90;
+    box-shadow: 0 0 20px ${({ hasConfirmed }) => (hasConfirmed ? '#ff555590' : '#50fa7b90' )};
     transform: translateX(5px);
 
     a {
       svg {
-        opacity: 1;
+        opacity: ${({ hasConfirmed }) => (hasConfirmed ? '0.2' : '1' )};
       }
     }
 
   }
 
   a {
-    background: transparent;
+    background: ${({ hasConfirmed }) => (hasConfirmed ? '#ff555510' : 'transparent' )};
     display: flex;
     align-items: center;
     padding: 20px;
     border-radius: 5px;
-    border: 1px solid #50fa7b;
-    color: #50fa7b;
+    border: 1px solid ${({ hasConfirmed }) => (hasConfirmed ? '#ff5555' : '#50fa7b' )};
+    color: ${({ hasConfirmed }) => (hasConfirmed ? '#ff5555' : '#50fa7b' )};
     transition: all 200ms ease-in-out;
 
     img {
       width: 50px;
       height: 50px;
       border-radius: 50%;
+      ${(props) =>
+      props.hasConfirmed &&
+      css`
+        z-index: -1000;
+        opacity: 0.5;
+        filter: blur(1px) grayscale(1);
+      `}
     }
 
     div {
       margin: 0 20px;
       flex: 1;
+      opacity: ${({ hasConfirmed }) => (hasConfirmed ? '0.4' : '1' )};
 
       p {
         font-size: 14px;
@@ -122,33 +138,52 @@ export const Repository = styled.div`
 
     svg {
       margin-left: auto;
-      color: #50fa7b;
-      opacity: 0.4;
+      color: ${({ hasConfirmed }) => (hasConfirmed ? '#ff5555' : '#50fa7b' )};
+      opacity: ${({ hasConfirmed }) => (hasConfirmed ? '0.2' : '0.4' )};
       transition: all 200ms ease-in-out;
     }
   }
 
-  button {
-    z-index: 1000;
-    display: flex;
-    align-self: end;
-    position: absolute;
-    margin-top: 3px;
-    margin-left: 3px;
-    width: 25px;
-    height: 25px;
-    background-color: transparent;
-    border: none;
-    transition: all 200ms ease-in-out;
+.unconfirmed {
+  z-index: 1000;
+  display: flex;
+  align-self: end;
+  position: absolute;
+  margin-top: 3px;
+  margin-left: 3px;
+  width: 25px;
+  height: 25px;
+  background-color: transparent;
+  border: none;
+  transition: all 200ms ease-in-out;
 
-    svg {
-      color: #f8f8f2;
-      opacity: 0.3;
-      margin-left: 0;
+  svg {
+    color: #f8f8f2;
+    opacity: 0.3;
+    margin-left: 0;
 
-      &:hover {
-        opacity: 1;
-      }
+    &:hover {
+      opacity: 1;
     }
   }
+}
+
+.confirmed {
+  z-index: 1000;
+  display: flex;
+  align-self: end;
+  position: absolute;
+  margin-top: 3px;
+  margin-left: 3px;
+  width: 25px;
+  height: 25px;
+  background-color: transparent;
+  border: none;
+  transition: all 200ms ease-in-out;
+
+  svg {
+    color: #ff5555;
+    margin-left: 0;
+  }
+}
 `;
