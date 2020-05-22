@@ -42,6 +42,7 @@ export const RepositoryInfo = styled.section`
     }
 
     div {
+      flex: 1;
       margin-left: 30px;
 
       strong {
