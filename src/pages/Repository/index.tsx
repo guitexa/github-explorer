@@ -38,16 +38,29 @@ const Repository: React.FC = () => {
 
   const [repository, setRepository] = useState<Repository | null>(null)
   const [issues, setIssues] = useState<Issue[]>([]);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     api.get(`repos/${params.repository}`).then((response) => {
       setRepository(response.data);
     });
 
-    api.get(`repos/${params.repository}/issues`).then((response) => {
+    api.get(`repos/${params.repository}/issues?per_page=5&page=${page}`).then((response) => {
       setIssues(response.data);
     });
-  }, [params.repository])
+  }, [params.repository, page]);
+
+
+  let observer = new IntersectionObserver((entries) => {
+    let ratio = entries[0].intersectionRatio;
+    if (ratio > 0 && issues.length >= 5) {
+      setPage(2);
+    }
+  });
+
+  let target = document.querySelector('#target');
+
+  {target && observer.observe(target);}
 
   return (
     <Container>
@@ -95,6 +108,7 @@ const Repository: React.FC = () => {
           <BsChevronRight size={20} />
         </a>
         ))}
+      <div id="target"></div>
       </Issues>
     </Container>
   )
