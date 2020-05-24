@@ -1,12 +1,16 @@
 import React, { useState, useEffect, FormEvent } from 'react';
 import { Link } from 'react-router-dom'
-import { BsChevronRight } from 'react-icons/bs';
+import { BsChevronRight, BsMoon } from 'react-icons/bs';
 import { RiCloseLine } from 'react-icons/ri';
+import { MdSettings, MdBrightnessHigh } from 'react-icons/md';
+import Switch from '@material-ui/core/Switch';
 import api from '../../services/api';
 
 import logo from '../../assets/logo.svg';
+import BrFlag from '../../assets/br-flag.png'
+import UsFlag from '../../assets/us-flag.png'
 
-import { Container, Title, Form, Error, Repositories, Repository } from './styles';
+import { Container, Header, Title, Form, Error, Repositories, Repository } from './styles';
 
 interface Repository {
   full_name: string;
@@ -19,6 +23,24 @@ interface Repository {
 
 const Dashboard: React.FC = () => {
   const [newRepo, setNewRepo] = useState('');
+  const [darkTheme, setDarkTheme] = useState(() => {
+    const storageTheme = localStorage.getItem('@GithubExplorer:theme');
+
+    if (storageTheme) {
+      return Boolean(storageTheme);
+    } else {
+      return true;
+    }
+  });
+  const [usLanguage, setUsLanguage] = useState(() => {
+    const storageLanguage = localStorage.getItem('@GithubExplorer:language');
+
+    if (storageLanguage) {
+      return Boolean(storageLanguage)
+    } else {
+      return true;
+    }
+  });
   const [inputError, setInputError] = useState('');
   const [repositories, setRepositories] = useState<Repository[]>(() => {
     const storageRepositories = localStorage.getItem('@GithubExplorer:repositories');
@@ -35,7 +57,15 @@ const Dashboard: React.FC = () => {
       '@GithubExplorer:repositories',
       JSON.stringify(repositories),
     );
-  }, [repositories])
+  }, [repositories]);
+
+  // useEffect(() => {
+  //   localStorage.setItem('@GithubExplorer:theme', String(darkTheme));
+  // }, [darkTheme]);
+
+  useEffect(() => {
+    localStorage.setItem('@GithubExplorer:language', String(usLanguage));
+  }, [usLanguage]);
 
   async function handleAddRepository(
     event: FormEvent<HTMLFormElement>,
@@ -100,7 +130,6 @@ const Dashboard: React.FC = () => {
     }
   }
 
-
   const [remove, setRemove] = useState('');
 
   function handleRemoveRepository(repoName: string): void {
@@ -111,18 +140,93 @@ const Dashboard: React.FC = () => {
     setRemove('');
   };
 
+  // function showMenu() {
+  //   const getMenu = document.getElementById('menu');
+
+  //   if (getMenu) {
+  //     if (getMenu.classList.contains('hidden')) {
+  //       getMenu.classList.remove('hidden');
+  //       setTimeout(function () {
+  //         getMenu.classList.add('visually');
+  //       }, 10);
+  //     }
+  //   }
+  // };
+
+  // function hideMenu() {
+  //   const getMenu = document.getElementById('menu');
+
+  //   if (getMenu) {
+  //     if (!getMenu.classList.contains('hidden')) {
+  //       getMenu.classList.add('visuallyhidden');
+  //       setTimeout(function () {
+  //         getMenu.classList.remove('visually');
+  //         getMenu.classList.remove('visuallyhidden');
+  //         getMenu.classList.add('hidden');
+  //       }, 200);
+  //     }
+  //   }
+  // };
+
+  // function handleSwitchDarkTheme() {
+  //   if (!darkTheme) {
+  //     setDarkTheme(true)
+  //   } else {
+  //     setDarkTheme(false)
+  //   }
+  // }
+
+  function handleSwitchUsLanguage() {
+    if (usLanguage === false) {
+      setUsLanguage(true)
+    } else {
+      setUsLanguage(false)
+    }
+  }
+
   return (
     <Container>
-    <img src={logo} alt="Logo Github Explorer" />
-    <Title>Explore repositórios no Github</Title>
+    <Header hasSwitchDarkTheme={!!darkTheme} hasSwitchUsLanguage={!!usLanguage}>
+      <img src={logo} alt="Logo Github Explorer" />
+      <div id="settings"> {/*  onMouseOver={showMenu} onMouseLeave={hideMenu} */}
+        {/* <button>
+        <MdSettings size={25} />
+        </button> */}
+        <div id="menu"> {/* className="hidden" */}
+          {/* <button>
+            <MdBrightnessHigh size={20} />
+            <Switch checked={darkTheme} onChange={handleSwitchDarkTheme} size="small"/>
+            <BsMoon size={20} />
+            </button> */}
+          <button>
+            <img src={BrFlag} height={20} />
+            <Switch checked={usLanguage} onChange={handleSwitchUsLanguage} size="small"/>
+            <img src={UsFlag} height={20} />
+          </button>
+        </div>
+      </div>
+    </Header>
+    <Title>
+      {!usLanguage && `Explore repositórios no Github`}
+      {!!usLanguage && `Explore Github repositories`}
+      </Title>
     <Form hasError={!!inputError} onSubmit={handleAddRepository}>
-      <input
+      {!usLanguage && <input
         autoFocus={true}
         value={newRepo}
         onChange={(e) => setNewRepo(e.target.value)}
         placeholder="Digite o nome do repositório"
-      />
-      <button type="submit">Pesquisar</button>
+      />}
+      {!!usLanguage && <input
+        autoFocus={true}
+        value={newRepo}
+        onChange={(e) => setNewRepo(e.target.value)}
+        placeholder="Type a repository name"
+      />}
+      <button type="submit">
+        {!usLanguage && `Pesquisar`}
+        {!!usLanguage && `Search`}
+      </button>
     </Form>
 
     <Error>{inputError}&nbsp;</Error>

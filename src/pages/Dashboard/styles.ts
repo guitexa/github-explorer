@@ -3,18 +3,149 @@ import styled, { css } from 'styled-components';
 interface FormProps {
   hasError: boolean;
 }
+
 interface ConfirmProps {
   hasConfirmed: boolean;
+}
+
+interface SwitchProps {
+  hasSwitchDarkTheme: boolean;
+  hasSwitchUsLanguage: boolean;
 }
 
 export const Container = styled.section`
   width: 550px;
 `;
 
+export const Header = styled.header<SwitchProps>`
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  #settings {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 0 10px 50px;
+
+    &:hover {
+      & > button > svg {
+        color: #f8f8f2;
+        transform: rotate(30deg);
+      }
+    }
+
+    button {
+      display: flex;
+      justify-content: flex-end;
+      background-color: transparent;
+      cursor: pointer;
+      border: 0;
+      outline: none;
+
+      svg:nth-child(1) {
+        color: #f8f8f290;
+      }
+
+      svg {
+        z-index: 1000;
+        transition: all 200ms ease-in-out;
+      }
+    }
+
+    #menu {
+      display: flex;
+      opacity: 1;
+      position: absolute;
+      /* margin-top: 20px; */
+      flex-direction: column;
+      transition: all 200ms ease-in-out;
+
+      button {
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 10px;
+        margin: 5px;
+        cursor: pointer;
+        background-color: transparent;
+        border: 1px solid #50fa7b;
+        outline: none;
+        border-radius: 5px;
+        transition: all 200ms ease-in-out;
+
+        /* Dark Icon */
+        svg:nth-child(1) {
+          color: ${({ hasSwitchDarkTheme }) => (hasSwitchDarkTheme ? '#f8f8f250' : '#f8f8f2')};
+        }
+
+        /* Bright Icon */
+        svg:nth-child(3) {
+          color: ${({ hasSwitchDarkTheme }) => (hasSwitchDarkTheme ? '#f8f8f2' : '#f8f8f250')};
+        }
+
+        /* Dark Icon */
+        img:nth-child(1) {
+          opacity: ${({ hasSwitchUsLanguage }) => (hasSwitchUsLanguage ? '0.5' : '1')};
+        }
+
+        /* Bright Icon */
+        img:nth-child(3) {
+          opacity: ${({ hasSwitchUsLanguage }) => (hasSwitchUsLanguage ? '1' : '0.5')};
+        }
+
+        &:hover {
+          box-shadow: 0 0 20px #50fa7b90;
+        }
+
+        .MuiSwitch-switchBase.Mui-checked {
+          transform: translateX(21px);
+        }
+
+        .MuiSwitch-root {
+          width: 45px;
+          margin: 0 10px;
+          display: flex;
+          align-items: center;
+
+          .MuiIconButton-label {
+            color: #50fa7b;
+          }
+
+          .MuiSwitch-track {
+            background-color: #000;
+            opacity: 1;
+          }
+        }
+
+        svg {
+          & + svg {
+            margin-left: 10px;
+          }
+        }
+      }
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .visually {
+      opacity: 1 !important;
+      transform: translateY(10px);
+    }
+
+    .visuallyhidden {
+      opacity: 0 !important;
+      transform: translateY(0px);
+    }
+  }
+`;
+
 export const Title = styled.h1`
   margin-top: 50px;
   color: #f8f8f2;
-  width: 300px;
+  width: 240px;
 `;
 
 export const Form = styled.form<FormProps>`

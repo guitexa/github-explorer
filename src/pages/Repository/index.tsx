@@ -36,31 +36,48 @@ interface Issue {
 const Repository: React.FC = () => {
   const { params } = useRouteMatch<RepositoryParams>();
 
+  const [darkTheme] = useState(() => {
+    const storageTheme = localStorage.getItem('@GithubExplorer:theme');
+
+    if (storageTheme) {
+      return Boolean(storageTheme);
+    } else {
+      return true;
+    }
+  });
+  const [usLanguage, setUsLanguage] = useState(() => {
+    return Boolean(localStorage.getItem('@GithubExplorer:language'));
+  });
+
   const [repository, setRepository] = useState<Repository | null>(null)
   const [issues, setIssues] = useState<Issue[]>([]);
-  const [page, setPage] = useState(1);
+  // const [page, setPage] = useState(1);
 
   useEffect(() => {
     api.get(`repos/${params.repository}`).then((response) => {
       setRepository(response.data);
     });
-
-    api.get(`repos/${params.repository}/issues?per_page=5&page=${page}`).then((response) => {
+    // ?per_page=5&page=${page}
+    api.get(`repos/${params.repository}/issues`).then((response) => {
       setIssues(response.data);
     });
-  }, [params.repository, page]);
+  }, [params.repository]);
 
 
-  let observer = new IntersectionObserver((entries) => {
-    let ratio = entries[0].intersectionRatio;
-    if (ratio > 0 && issues.length >= 5) {
-      setPage(2);
-    }
-  });
 
-  let target = document.querySelector('#target');
+  // let observer = new IntersectionObserver((entries) => {
+  //   let ratio = entries[0].intersectionRatio;
+  //   if (ratio > 0 && issues.length >= 5) {
+  //     setPage(2);
+  //   }
+  // }, {
+  //   rootMargin: '100px',
+  //   threshold: 1,
+  // });
 
-  {target && observer.observe(target);}
+  // let target = document.querySelector('#target');
+
+  // {target && observer.observe(target);}
 
   return (
     <Container>
@@ -68,7 +85,8 @@ const Repository: React.FC = () => {
         <img src={logo} alt="Logo Github Explorer" />
         <Link to={'/'}>
           <BsChevronLeft size={13} />
-          Voltar
+          {!usLanguage && `Voltar`}
+          {!!usLanguage && `Back`}
         </Link>
       </Header>
 
@@ -84,7 +102,10 @@ const Repository: React.FC = () => {
       <ul>
         <li>
           <strong>{repository.stargazers_count}</strong>
-          <p>Stars</p>
+          <p>
+            {!usLanguage && `Estrelas`}
+            {!!usLanguage && `Stars`}
+            </p>
         </li>
         <li>
           <strong>{repository.forks_count}</strong>
@@ -92,7 +113,10 @@ const Repository: React.FC = () => {
         </li>
         <li>
           <strong>{repository.open_issues_count}</strong>
-          <p>Issues abertas</p>
+          <p>
+            {!usLanguage && `Issues abertas`}
+            {!!usLanguage && `Open Issues`}
+            </p>
         </li>
       </ul>
       </RepositoryInfo>
@@ -108,7 +132,7 @@ const Repository: React.FC = () => {
           <BsChevronRight size={20} />
         </a>
         ))}
-      <div id="target"></div>
+      {/* <div id="target"></div> */}
       </Issues>
     </Container>
   )
