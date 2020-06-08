@@ -1,6 +1,7 @@
 import { createGlobalStyle } from 'styled-components';
 
-import gitBg from '../assets/gitbg.svg';
+import BackgroundDark from '../assets/background-dark.svg';
+// import BackgroundLight from '../assets/background-light.svg';
 
 export default createGlobalStyle`
   * {
@@ -12,7 +13,7 @@ export default createGlobalStyle`
   }
 
   body {
-    background: #282a36 url(${gitBg}) no-repeat 90% top fixed;
+    background: #282a36 url(${BackgroundDark}) no-repeat 90% top fixed;
     background-size: 50%;
     -webkit-font-smoothing: antialiased;
     color: #f8f8f2;
