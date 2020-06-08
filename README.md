@@ -8,6 +8,7 @@
 
 <p align="center">
     <img alt="Projeto em funcionamento" src="https://media.giphy.com/media/kHaeJOOEB6Fi1p3zL9/giphy.gif" />
+    <img alt="Projeto em funcionamento" src="https://media.giphy.com/media/ggKStUFM2yJRM2ovd5/giphy.gif" />
 </p>
 
 ## ⚙️ Instalação
