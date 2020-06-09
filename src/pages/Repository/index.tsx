@@ -40,17 +40,6 @@ const Repository: React.FC = () => {
   const { language } = useLang();
   const { theme } = useTheme();
   const { params } = useRouteMatch<RepositoryParams>();
-
-  const [darkTheme] = useState(() => {
-    const storageTheme = localStorage.getItem('@GithubExplorer:theme');
-
-    if (storageTheme) {
-      return Boolean(storageTheme);
-    } else {
-      return true;
-    }
-  });
-
   const [repository, setRepository] = useState<Repository | null>(null);
   const [issues, setIssues] = useState<Issue[]>([]);
   // const [page, setPage] = useState(1);
@@ -92,8 +81,10 @@ const Repository: React.FC = () => {
   return (
     <Container>
       <Header>
-        {!theme && <img src={LogoDark} alt="Logo Github Explorer" />}
-        {!!theme && <img src={LogoLight} alt="Logo Github Explorer" />}
+        {theme === 'dark' && <img src={LogoDark} alt="Logo Github Explorer" />}
+        {theme === 'light' && (
+          <img src={LogoLight} alt="Logo Github Explorer" />
+        )}
         <Link to={'/'}>
           <BsChevronLeft size={13} />
           {!language && `Voltar`}
@@ -102,7 +93,7 @@ const Repository: React.FC = () => {
       </Header>
 
       {repository && (
-        <RepositoryInfo>
+        <RepositoryInfo hasSwitchTheme={theme === 'dark' ? false : true}>
           <header>
             <img
               src={repository.owner.avatar_url}
@@ -136,7 +127,7 @@ const Repository: React.FC = () => {
         </RepositoryInfo>
       )}
 
-      <Issues>
+      <Issues hasSwitchTheme={theme === 'dark' ? false : true}>
         {issues.map((issue) => (
           <a key={issue.id} href={issue.html_url}>
             <div>

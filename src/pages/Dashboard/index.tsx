@@ -3,7 +3,7 @@ import React, {
   useEffect,
   FormEvent,
   useCallback,
-  useRef,
+  useContext,
 } from 'react';
 import { Link } from 'react-router-dom';
 import { BsChevronRight, BsMoon } from 'react-icons/bs';
@@ -66,40 +66,41 @@ const Dashboard: React.FC = () => {
   }, [repositories]);
 
   // Função para adicionar um novo repositório
-  const handleAddRepository = useCallback(
-    async (event: FormEvent<HTMLFormElement>): Promise<void> => {
-      event.preventDefault();
+  async function handleAddRepository(
+    event: FormEvent<HTMLFormElement>
+  ): Promise<void> {
+    event.preventDefault();
 
-      if (!newRepo) {
-        setInputError('Digite um nome de repositório');
-        return;
-      }
+    if (!newRepo) {
+      setInputError('Digite um nome de repositório');
+      return;
+    }
 
-      const checkExists = repositories.find((e) => e.full_name === newRepo);
+    const checkExists = repositories.find(
+      (e) => e.full_name.toLowerCase() === newRepo.toLowerCase()
+    );
 
-      if (checkExists) {
-        setInputError('Este repositório já foi adicionado');
-        return;
-      }
+    if (checkExists) {
+      setInputError('Este repositório já foi adicionado');
+      return;
+    }
 
-      try {
-        const response = await api.get<Repository>(`repos/${newRepo}`);
+    try {
+      const response = await api.get<Repository>(`repos/${newRepo}`);
 
-        const repository = response.data;
+      const repository = response.data;
 
-        setRepositories([...repositories, repository]);
+      setRepositories([...repositories, repository]);
 
-        setNewRepo('');
-        setInputError('');
-      } catch (err) {
-        setInputError('Repositório não encontrado');
-      }
-    },
-    [newRepo, repositories]
-  );
+      setNewRepo('');
+      setInputError('');
+    } catch (err) {
+      setInputError('Repositório não encontrado');
+    }
+  }
 
   // Função para remover um repositório
-  const handleRemoveRepository = useCallback((repoName: string): void => {
+  function handleRemoveRepository(repoName: string): void {
     const getIndex = repositories.findIndex(
       (obj) => obj.full_name === repoName
     );
@@ -107,7 +108,7 @@ const Dashboard: React.FC = () => {
     repositories.splice(getIndex, 1);
     setRepositories([...repositories]);
     setRemove('');
-  }, []);
+  }
 
   document.onkeyup = eventKeyUp;
   function eventKeyUp(e: any) {
@@ -143,9 +144,14 @@ const Dashboard: React.FC = () => {
 
   return (
     <Container>
-      <Header hasSwitchTheme={theme} hasSwitchLanguage={language}>
-        {!theme && <img src={LogoDark} alt="Logo Github Explorer" />}
-        {!!theme && <img src={LogoLight} alt="Logo Github Explorer" />}
+      <Header
+        hasSwitchTheme={theme === 'dark' ? false : true}
+        hasSwitchLanguage={language}
+      >
+        {theme === 'dark' && <img src={LogoDark} alt="Logo Github Explorer" />}
+        {theme === 'light' && (
+          <img src={LogoLight} alt="Logo Github Explorer" />
+        )}
         <div id="settings">
           <button>
             <MdSettings size={25} />
@@ -153,7 +159,11 @@ const Dashboard: React.FC = () => {
           <div id="menu" className="hidden">
             <button>
               <BsMoon size={20} />
-              <Switch checked={theme} onChange={switchTheme} size="small" />
+              <Switch
+                checked={theme === 'dark' ? false : true}
+                onChange={switchTheme}
+                size="small"
+              />
               <MdBrightnessHigh size={20} />
             </button>
             <button>
@@ -172,7 +182,11 @@ const Dashboard: React.FC = () => {
         {!language && `Explore repositórios no Github`}
         {!!language && `Explore Github repositories`}
       </Title>
-      <Form hasError={!!inputError} onSubmit={handleAddRepository}>
+      <Form
+        hasSwitchTheme={theme === 'dark' ? false : true}
+        hasError={!!inputError}
+        onSubmit={handleAddRepository}
+      >
         {!language && (
           <input
             autoFocus={true}
@@ -200,6 +214,7 @@ const Dashboard: React.FC = () => {
       <Repositories>
         {repositories.map((repository) => (
           <Repository
+            hasSwitchTheme={theme === 'dark' ? false : true}
             key={repository.full_name}
             hasConfirmed={remove.includes(repository.full_name)}
           >

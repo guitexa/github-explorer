@@ -2,9 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 
+import { ThemeStore } from './hooks/ThemeContext';
+
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <ThemeStore>
+      <App />
+    </ThemeStore>
   </React.StrictMode>,
   document.getElementById('root')
 );

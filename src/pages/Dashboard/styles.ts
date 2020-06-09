@@ -1,23 +1,26 @@
 import styled, { css } from 'styled-components';
+import { transparentize, shade } from 'polished';
 
 interface FormProps {
   hasError: boolean;
+  hasSwitchTheme: boolean;
 }
 
-interface ConfirmProps {
-  hasConfirmed: boolean;
-}
-
-interface SwitchProps {
+interface HeaderProps {
   hasSwitchTheme: boolean;
   hasSwitchLanguage: boolean;
+}
+
+interface RepositoryProps {
+  hasSwitchTheme: boolean;
+  hasConfirmed: boolean;
 }
 
 export const Container = styled.section`
   width: 550px;
 `;
 
-export const Header = styled.header<SwitchProps>`
+export const Header = styled.header<HeaderProps>`
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -29,7 +32,6 @@ export const Header = styled.header<SwitchProps>`
 
     &:hover {
       & > button > svg {
-        color: #f8f8f2;
         transform: rotate(-30deg);
       }
 
@@ -42,19 +44,19 @@ export const Header = styled.header<SwitchProps>`
 
     button {
       display: flex;
-      justify-content: flex-end;
       background-color: transparent;
+      justify-content: flex-end;
       cursor: pointer;
       border: 0;
       outline: none;
 
       svg:nth-child(1) {
-        color: #f8f8f290;
+        color: ${(props) => props.theme.body.textColor};
       }
 
       svg {
         z-index: 1000;
-        transition: all 200ms ease-in-out;
+        transition: transform 200ms ease-in-out;
       }
     }
 
@@ -62,10 +64,10 @@ export const Header = styled.header<SwitchProps>`
       display: flex;
       opacity: 0;
       position: absolute;
+      visibility: hidden;
       margin-top: 20px;
       flex-direction: column;
       transition: all 200ms ease-in-out;
-      visibility: hidden;
 
       button {
         text-align: center;
@@ -75,22 +77,33 @@ export const Header = styled.header<SwitchProps>`
         padding: 10px;
         margin: 5px;
         cursor: pointer;
-        background-color: transparent;
-        border: 1px solid #50fa7b;
         outline: none;
         border-radius: 5px;
         transition: all 200ms ease-in-out;
+        background-color: transparent;
+        border: 1px solid #50fa7b;
+        ${(props) =>
+          props.hasSwitchTheme &&
+          css`
+            background-color: #f8f8f2;
+            border: 1px solid transparent;
+          `};
 
         /* Dark Icon */
         svg:nth-child(1) {
           color: ${({ hasSwitchTheme }) =>
-            hasSwitchTheme ? '#f8f8f250' : '#f8f8f2'};
+            hasSwitchTheme
+              ? (props) => transparentize(0.6, `${props.theme.body.textColor}`)
+              : (props) => props.theme.body.textColor};
         }
 
         /* Bright Icon */
         svg:nth-child(3) {
           color: ${({ hasSwitchTheme }) =>
-            hasSwitchTheme ? '#f8f8f2' : '#f8f8f250'};
+            hasSwitchTheme
+              ? (props) => props.theme.body.textColor
+              : (props) =>
+                  transparentize(0.5, `${props.theme.body.textColor}`)};
         }
 
         /* Dark Icon */
@@ -107,6 +120,11 @@ export const Header = styled.header<SwitchProps>`
 
         &:hover {
           box-shadow: 0 0 20px #50fa7b90;
+          ${(props) =>
+            props.hasSwitchTheme &&
+            css`
+              box-shadow: none;
+            `};
         }
 
         .MuiSwitch-switchBase.Mui-checked {
@@ -124,11 +142,20 @@ export const Header = styled.header<SwitchProps>`
           align-items: center;
 
           .MuiIconButton-label {
-            color: #50fa7b;
+            color: ${(props) => props.theme.body.green};
+
+            &:hover {
+              ${(props) =>
+                props.hasSwitchTheme &&
+                css`
+                  color: ${(props) => shade(0.2, `${props.theme.body.green}`)};
+                `};
+            }
           }
 
           .MuiSwitch-track {
-            background-color: #000;
+            background-color: ${({ hasSwitchTheme }) =>
+              hasSwitchTheme ? '#ddd' : '#000'};
             opacity: 1;
           }
         }
@@ -145,7 +172,6 @@ export const Header = styled.header<SwitchProps>`
 
 export const Title = styled.h1`
   margin-top: 50px;
-  color: #f8f8f2;
   width: 240px;
 `;
 
@@ -157,15 +183,27 @@ export const Form = styled.form<FormProps>`
   input {
     flex: 1;
     padding: 18px 17px;
-    border: 1px solid #50fa7b;
+    border: 1px solid
+      ${({ hasSwitchTheme }) =>
+        hasSwitchTheme ? 'transparent' : (props) => props.theme.body.green};
     border-radius: 5px 0 0 5px;
-    background: transparent;
-    color: #f8f8f2;
+    background: ${({ hasSwitchTheme }) =>
+      hasSwitchTheme ? '#f8f8f2' : 'transparent'};
+    color: ${(props) => props.theme.body.textColor};
     transition: all 200ms ease-in-out;
 
     &:focus {
-      box-shadow: 0 0 20px
-        ${({ hasError }) => (hasError ? '#ff555590' : '#50fa7b90')};
+      ${(props) =>
+        props.hasSwitchTheme === false &&
+        css`
+          box-shadow: 0 0 20px #50fa7b90;
+        `};
+      ${(props) =>
+        props.hasSwitchTheme === false &&
+        props.hasError &&
+        css`
+          box-shadow: 0 0 20px #ff555590;
+        `};
     }
 
     ${(props) =>
@@ -173,11 +211,17 @@ export const Form = styled.form<FormProps>`
       css`
         border-color: #ff5555;
         border-right: none;
+      `}
+
+    ${(props) =>
+      props.hasSwitchTheme === false &&
+      props.hasError &&
+      css`
         box-shadow: 0 0 20px #ff555590;
       `}
 
     &::placeholder {
-      color: #f8f8f2;
+      color: ${(props) => transparentize(0.4, `${props.theme.body.textColor}`)};
     }
   }
 
@@ -185,14 +229,22 @@ export const Form = styled.form<FormProps>`
     padding: 0 45px;
     border: 0;
     border-radius: 0 5px 5px 0;
-    background: #50fa7b;
-    color: #282a36;
+    background: ${(props) => props.theme.body.green};
+    color: ${(props) => props.theme.button.textColor};
     font-size: 17px;
     font-weight: bold;
     transition: all 200ms ease-in-out;
 
     &:hover {
-      box-shadow: 0 0 20px #50fa7b90;
+      background: ${({ hasSwitchTheme }) =>
+        hasSwitchTheme
+          ? (props) => shade(0.2, `${props.theme.body.green}`)
+          : null};
+      ${(props) =>
+        props.hasSwitchTheme === false &&
+        css`
+          box-shadow: 0 0 20px #50fa7b90;
+        `};
     }
   }
 `;
@@ -209,10 +261,11 @@ export const Repositories = styled.div`
   max-width: 550px;
 `;
 
-export const Repository = styled.div<ConfirmProps>`
+export const Repository = styled.div<RepositoryProps>`
   transition: all 200ms ease-in-out;
   ${(props) =>
     props.hasConfirmed &&
+    props.hasSwitchTheme === false &&
     css`
       box-shadow: 0 0 10px #ff555580;
     `}
@@ -223,7 +276,12 @@ export const Repository = styled.div<ConfirmProps>`
 
   &:hover {
     box-shadow: 0 0 20px
-      ${({ hasConfirmed }) => (hasConfirmed ? '#ff555590' : '#50fa7b90')};
+      ${({ hasConfirmed, hasSwitchTheme }) =>
+        hasConfirmed && hasSwitchTheme === false
+          ? '#ff555590'
+          : hasSwitchTheme === false
+          ? '#50fa7b90'
+          : 'transparent'};
     transform: translateX(5px);
 
     a {
@@ -234,15 +292,33 @@ export const Repository = styled.div<ConfirmProps>`
   }
 
   a {
-    background: ${({ hasConfirmed }) =>
-      hasConfirmed ? '#ff555510' : 'transparent'};
+    background: ${({ hasConfirmed, hasSwitchTheme }) =>
+      hasConfirmed && hasSwitchTheme === false
+        ? '#ff555510'
+        : hasConfirmed && hasSwitchTheme
+        ? '#ff555530'
+        : hasSwitchTheme
+        ? '#f8f8f2'
+        : 'transparent'};
     display: flex;
     align-items: center;
     padding: 20px;
     border-radius: 5px;
     border: 1px solid
-      ${({ hasConfirmed }) => (hasConfirmed ? '#ff5555' : '#50fa7b')};
-    color: ${({ hasConfirmed }) => (hasConfirmed ? '#ff5555' : '#50fa7b')};
+      ${({ hasConfirmed, hasSwitchTheme }) =>
+        hasConfirmed && hasSwitchTheme === false
+          ? '#ff5555'
+          : hasConfirmed && hasSwitchTheme
+          ? '#ff555560'
+          : hasSwitchTheme === false
+          ? '#50fa7b'
+          : 'transparent'};
+    color: ${({ hasConfirmed, hasSwitchTheme }) =>
+      hasConfirmed && hasSwitchTheme === false
+        ? '#ff5555'
+        : hasSwitchTheme === false
+        ? '#50fa7b'
+        : (props) => props.theme.body.textColor};
     transition: all 200ms ease-in-out;
 
     img {
@@ -266,13 +342,18 @@ export const Repository = styled.div<ConfirmProps>`
       p {
         font-size: 14px;
         padding-top: 5px;
-        color: #f8f8f290;
+        color: #888;
       }
     }
 
     svg {
       margin-left: auto;
-      color: ${({ hasConfirmed }) => (hasConfirmed ? '#ff5555' : '#50fa7b')};
+      color: ${({ hasConfirmed, hasSwitchTheme }) =>
+        hasConfirmed
+          ? '#ff5555'
+          : hasSwitchTheme
+          ? (props) => props.theme.body.textColor
+          : (props) => props.theme.body.green};
       opacity: ${({ hasConfirmed }) => (hasConfirmed ? '0.2' : '0.4')};
       transition: all 200ms ease-in-out;
     }
@@ -292,12 +373,12 @@ export const Repository = styled.div<ConfirmProps>`
     transition: all 200ms ease-in-out;
 
     svg {
-      color: #f8f8f2;
-      opacity: 0.3;
+      color: #888;
       margin-left: 0;
+      transition: all 200ms ease-in-out;
 
       &:hover {
-        opacity: 1;
+        color: ${(props) => props.theme.body.textColor};
       }
     }
   }
@@ -316,7 +397,8 @@ export const Repository = styled.div<ConfirmProps>`
     transition: all 200ms ease-in-out;
 
     svg {
-      color: #ff5555;
+      color: ${({ hasSwitchTheme }) =>
+        hasSwitchTheme ? '#ff5555' : '#ff5555'};
       margin-left: 0;
     }
   }

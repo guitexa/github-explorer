@@ -1,11 +1,11 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
 
 interface ThemeState {
-  theme: boolean;
+  theme: string;
 }
 
 interface ThemeContextData {
-  theme: boolean;
+  theme: string;
   switchTheme(): void;
 }
 
@@ -16,19 +16,19 @@ export const ThemeStore: React.FC = ({ children }) => {
     const theme = localStorage.getItem('@GithubExplorer: theme');
 
     if (theme) {
-      return { theme: JSON.parse(theme) };
+      return { theme };
     }
 
-    return { theme: false };
+    return { theme: 'dark' };
   });
 
   const switchTheme = useCallback(() => {
-    if (!!theme.theme) {
-      localStorage.setItem('@GithubExplorer: theme', 'false');
-      setTheme({ theme: false });
+    if (theme.theme === 'light') {
+      localStorage.setItem('@GithubExplorer: theme', 'dark');
+      setTheme({ theme: 'dark' });
     } else {
-      localStorage.setItem('@GithubExplorer: theme', 'true');
-      setTheme({ theme: true });
+      localStorage.setItem('@GithubExplorer: theme', 'light');
+      setTheme({ theme: 'light' });
     }
   }, [theme.theme]);
 

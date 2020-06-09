@@ -1,8 +1,5 @@
 import { createGlobalStyle } from 'styled-components';
 
-import BackgroundDark from '../assets/background-dark.svg';
-// import BackgroundLight from '../assets/background-light.svg';
-
 export default createGlobalStyle`
   * {
     margin: 0;
@@ -12,11 +9,16 @@ export default createGlobalStyle`
     text-decoration: none;
   }
 
+  html {
+    overflow-y:scroll;
+  }
+
   body {
-    background: #282a36 url(${BackgroundDark}) no-repeat 90% top fixed;
+    background: ${(props) =>
+      props.theme.body.background} no-repeat 90% top fixed;
     background-size: 50%;
     -webkit-font-smoothing: antialiased;
-    color: #f8f8f2;
+    color: ${(props) => props.theme.body.textColor};
   }
 
   body, input, button {

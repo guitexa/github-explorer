@@ -1,4 +1,13 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+import { transparentize } from 'polished';
+
+interface RepositoryInfo {
+  hasSwitchTheme: boolean;
+}
+
+interface IssuesProps {
+  hasSwitchTheme: boolean;
+}
 
 export const Container = styled.section`
   width: 550px;
@@ -11,10 +20,10 @@ export const Header = styled.header`
   a {
     display: flex;
     align-items: center;
-    color: #f8f8f290;
+    color: ${(props) => transparentize(0.5, `${props.theme.body.textColor}`)};
 
     &:hover {
-    color: #f8f8f2;
+      color: ${(props) => props.theme.body.textColor};
       svg {
         transform: translateX(-3px);
       }
@@ -27,7 +36,7 @@ export const Header = styled.header`
   }
 `;
 
-export const RepositoryInfo = styled.section`
+export const RepositoryInfo = styled.section<RepositoryInfo>`
   margin-top: 50px;
 
   header {
@@ -45,14 +54,17 @@ export const RepositoryInfo = styled.section`
       margin-left: 30px;
 
       strong {
-        color: #50fa7b;
+        color: ${({ hasSwitchTheme }) =>
+          hasSwitchTheme
+            ? (props) => props.theme.body.textColor
+            : (props) => props.theme.body.green};
         font-size: 30px;
       }
 
       p {
         font-size: 18px;
         margin-top: 4px;
-        color: #f8f8f290;
+        color: #888;
       }
     }
   }
@@ -71,30 +83,35 @@ export const RepositoryInfo = styled.section`
 
       strong {
         font-size: 28px;
-        color: #f8f8f2;
+        color: ${(props) => props.theme.body.textColor};
       }
 
       p {
         font-size: 15px;
-        color: #f8f8f290;
+        color: ${(props) =>
+          transparentize(0.5, `${props.theme.body.textColor}`)};
       }
     }
   }
-
 `;
 
-export const Issues = styled.section`
+export const Issues = styled.section<IssuesProps>`
   margin-top: 41px;
   max-width: 550px;
 
   a {
-    background: transparent;
+    background: ${({ hasSwitchTheme }) =>
+      hasSwitchTheme ? '#f8f8f2' : 'transparent'};
     display: flex;
     align-items: center;
     padding: 20px;
     border-radius: 5px;
-    border: 1px solid #50fa7b;
-    color: #50fa7b;
+    border: 1px solid
+      ${({ hasSwitchTheme }) => (hasSwitchTheme ? 'transparent' : '#50fa7b')};
+    color: ${({ hasSwitchTheme }) =>
+      hasSwitchTheme
+        ? (props) => props.theme.body.textColor
+        : (props) => props.theme.body.green};
     transition: all 200ms ease-in-out;
 
     & + a {
@@ -102,7 +119,11 @@ export const Issues = styled.section`
     }
 
     &:hover {
-      box-shadow: 0 0 20px #50fa7b90;
+      ${(props) =>
+        props.hasSwitchTheme === false &&
+        css`
+          box-shadow: 0 0 20px #50fa7b90;
+        `};
       transform: translateX(10px);
 
       svg {
@@ -116,13 +137,16 @@ export const Issues = styled.section`
       p {
         font-size: 14px;
         padding-top: 5px;
-        color: #f8f8f290;
+        color: #888;
       }
     }
 
     svg {
       margin-left: auto;
-      color: #50fa7b;
+      color: ${({ hasSwitchTheme }) =>
+        hasSwitchTheme
+          ? (props) => props.theme.body.textColor
+          : (props) => props.theme.body.green};
       opacity: 0.4;
       transition: all 200ms ease-in-out;
     }
