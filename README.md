@@ -1,13 +1,5 @@
 <p align="center">
-    <img alt="GoStack" src="https://ap.imagensbrasil.org/images/2020/04/09/banner-bootcamp-gostack-11.png" style="border-radius:5px;"/>
-</p>
-
-<h3 align="center" >
-  📌 App to explore Github repositories
-</h3>
-
-<p align="center">
-<img alt="Project working" src="https://media.giphy.com/media/Vf2771A5ma5G7TTq7k/giphy.gif" style="border-radius:5px;"/>
+    <img alt="GoStack" src="https://storage.googleapis.com/golden-wind/bootcamp-gostack/header-desafios-new.png" style="border-radius:5px;"/>
 </p>
 
 <p align="center">
@@ -40,6 +32,14 @@
 
 </p>
 
+<h3 align="center" >
+  📌 App to explore Github repositories
+</h3>
+
+<p align="center">
+<img alt="Project working" src="https://media.giphy.com/media/Vf2771A5ma5G7TTq7k/giphy.gif" style="border-radius:5px;"/>
+</p>
+
 ## 📜 About the project
 
 This project was proposed by Rocketseat on Bootcamp GoStack. The goal is develop an app to explore Github repositóries, where you can add a repository and view its listed issues.
@@ -55,13 +55,6 @@ yarn
 # Run frontend with Yarn
 yarn start
 ```
-
-## Author
-
-🙋🏻‍♂️ **Guilherme Teixeira**
-
-[![github](http://ap.imagensbrasil.org/images/2018/12/10/github-logo-1.png) ](https://github.com/guitexa)
-[![linkedin](http://ap.imagensbrasil.org/images/2018/12/10/linkedin-1.png)](https://www.linkedin.com/in/guitexa/)
 
 ## 🤝 Contributing
 
