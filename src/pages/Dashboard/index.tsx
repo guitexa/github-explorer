@@ -58,16 +58,12 @@ const Dashboard: React.FC = () => {
     }
   });
 
-  console.log('testouuu')
-
   useEffect(() => {
     localStorage.setItem(
       '@GithubExplorer: repositories',
       JSON.stringify(repositories)
     );
   }, [repositories]);
-
-  console.log('outro teste')
 
   // Função para adicionar um novo repositório
   async function handleAddRepository(
