@@ -192,7 +192,7 @@ const Dashboard: React.FC = () => {
             autoFocus={true}
             value={newRepo}
             onChange={(e) => setNewRepo(e.target.value)}
-            placeholder="Digite o nome do repositório"
+            placeholder="Digite o nome de um repositório"
           />
         )}
         {!!language && (
