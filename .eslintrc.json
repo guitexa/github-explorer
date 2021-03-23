@@ -34,7 +34,7 @@
       "react-hooks/exhaustive-deps": "warn",
       "react/jsx-filename-extension": [1, { "extension": ["*.tsx"] }],
       "import/prefer-default-export": "off",
-      "@typesscript-eslint/explicit-function-return-type": [
+      "@typescript-eslint/explicit-function-return-type": [
         "error",
         {
           "allowExpressions": true,
@@ -51,7 +51,7 @@
     },
     "settings": {
       "import/resolver": {
-        "typescriot": {}
+        "typescript": {}
       }
     }
 }
