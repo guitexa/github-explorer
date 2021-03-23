@@ -67,6 +67,8 @@ const Dashboard: React.FC = () => {
     );
   }, [repositories]);
 
+  console.log('outro teste')
+
   // Função para adicionar um novo repositório
   async function handleAddRepository(
     event: FormEvent<HTMLFormElement>
