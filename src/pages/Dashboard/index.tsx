@@ -58,6 +58,8 @@ const Dashboard: React.FC = () => {
     }
   });
 
+  console.log('testouuu')
+
   useEffect(() => {
     localStorage.setItem(
       '@GithubExplorer: repositories',
