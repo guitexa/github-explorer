@@ -95,7 +95,7 @@ const Dashboard: React.FC = () => {
       setNewRepo('');
       setInputError('');
     } catch (err) {
-      setInputError('Repositório não encontrado');
+      setInputError('Repositório não encontrado =(');
     }
   }
 
